@@ -13,7 +13,7 @@ const verifyQueryHMAC = helper.verifyQueryHMAC;
 const shopAdminAPI = helper.shopAdminAPI;
 const router = Router();
 const scopes = "read_products,write_products,write_themes,write_orders,read_orders";
-const forwardingAddress = "https://tracified-api-test.herokuapp.com";
+const forwardingAddress = "https://tracified-demo-api.herokuapp.com";
 const apiKey = "fc26592657245a776beed0455931726f";
 const apiSecret = "299ec1ec5faa0bc268f81c1abd1fd472";
 
