@@ -15,7 +15,7 @@ const router = Router();
 const scopes = "read_products,write_products,write_themes,write_orders,read_orders";
 const forwardingAddress = "https://tracified-demo-api.herokuapp.com";
 const apiKey = "fc26592657245a776beed0455931726f";
-const apiSecret = "299ec1ec5faa0bc268f81c1abd1fd472";
+const apiSecret = "ab648fa8e90be5b3493e6f96aab2b3f8";
 
 //installation route
 router.get("/", (req: Request, res: Response) => {
