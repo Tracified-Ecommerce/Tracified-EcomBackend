@@ -14,8 +14,8 @@ const shopAdminAPI = helper.shopAdminAPI;
 const router = Router();
 const scopes = "read_products,write_products,write_themes,write_orders,read_orders";
 const forwardingAddress = "https://tracified-api-test.herokuapp.com";
-const apiKey = "8cbed825a1a05c935cbb12574bb24257";
-const apiSecret = "4bc97ed0ae56f7e75f2560f7816fd96a";
+const apiKey = "fc26592657245a776beed0455931726f";
+const apiSecret = "299ec1ec5faa0bc268f81c1abd1fd472";
 
 //installation route
 router.get("/", (req: Request, res: Response) => {
