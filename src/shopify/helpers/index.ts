@@ -52,6 +52,7 @@
             method,
             uri: "https://" + shop + relUrl,
         };
+        console.log("inside shopAdminApi method, uri is : " + options.uri);
         request(options).then(callback).catch((err: Error) => {
             return (err);
           } );
