@@ -39,7 +39,7 @@ app.engine("html", ejs.renderFile);
  * db connection
  * -set up default mongoose connection
  */
-const mongoDB = "mongodb://tracified:1234@ds219318.mlab.com:19318/ecommerceplugin";
+const mongoDB = "mongodb://tracified:1234@ds255768.mlab.com:55768/tracifieddemo";
 mongoose.connect(mongoDB, {
   useMongoClient: true,
 });

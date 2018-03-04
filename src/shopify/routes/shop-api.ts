@@ -23,6 +23,7 @@ router.all("/*", (req: IRequest, res: Response, next: NextFunction) => {
 router.get("/products", (req: IRequest, res: Response) => {
     console.log("products");
     console.log(req.session.shop.name);
+    console.log("shop request header : " + req.shopRequestHeaders);
     shopAdminAPI(
         "GET", req.session.shop.name, "/admin/products.json", req.shopRequestHeaders, null, (products: any) => {
         console.log("got products");
