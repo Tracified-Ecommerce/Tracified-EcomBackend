@@ -1,4 +1,7 @@
+// ProductMapping.js
+
 import React, { Component } from 'react';
+import Sticky from 'react-sticky-el';
 import ReactDOM from 'react-dom';
 import ProductMappingService from './ProductMappingService';
 import axios from 'axios';
@@ -20,17 +23,19 @@ import {
   Heading,
   PageActions,
   Select,
-  Checkbox
+  Checkbox,
+  Spinner, 
+  DisplayText,
+  TextStyle 
 } from '@shopify/polaris';
 import '@shopify/polaris/styles.css';
 import './AppMP.css';
 import './ProductMapping.css';
 import { setTimeout } from 'timers';
-import Spinner from '../../lib/components/Spinner';
+// import Spinner from '../../lib/components/Spinner';
 import { request } from 'http';
-import { Row, Col } from 'reactstrap';
-import Loading from '../Loading'
-
+import { Row, Col, Container} from 'reactstrap';
+import Loading from '../Loading';
 
 
 
@@ -62,7 +67,7 @@ class ProductMapping extends Component {
       this.state.mapping[shopifyProductID][1] = permission;
     }
 
-    console.log("updated permissions: "+this.state.permission);
+    console.log(this.state.permission);
   }
   updateMapping(tracifiedItemID, shopifyProductID) {
     console.log(shopifyProductID);
@@ -73,29 +78,29 @@ class ProductMapping extends Component {
       this.state.mapping[shopifyProductID] = [tracifiedItemID, false];
     }
 
-    console.log("updated mapping :"+this.state.mapping);
+    console.log(this.state.mapping);
 
   }
 
-  onItemChange(tracifiedItemID, shopifyProductID){
-    
-    if(this.state.mapping.hasOwnProperty(shopifyProductID)) {
-      if(!(tracifiedItemID=="noItem")){        
+  onItemChange(tracifiedItemID, shopifyProductID) {
+
+    if (this.state.mapping.hasOwnProperty(shopifyProductID)) {
+      if (!(tracifiedItemID == "noItem")) {
         this.state.mapping[shopifyProductID][0] = tracifiedItemID;
       }
-      else{
+      else {
         let tempMapping = this.state.mapping;
         delete tempMapping[shopifyProductID];
         this.state.mapping = tempMapping;
       }
     }
-    else{
+    else {
       this.state.mapping[shopifyProductID] = [tracifiedItemID, false];
     }
-    console.log("item was changed :"+this.state.mapping);
+    console.log(this.state.mapping);
   }
-  
-  onPermissionChange(permission, shopifyProductID){
+
+  onPermissionChange(permission, shopifyProductID) {
     console.log(this.state.mapping[shopifyProductID]);
     console.log(permission);
     console.log(shopifyProductID);
@@ -105,22 +110,16 @@ class ProductMapping extends Component {
 
 
   componentDidMount() {
-    axios.get('/shopify/config/mapping')
-    .then(response => {
-      if(response.status == 200){
-        console.log("inside if");
+    axios.get('https://tracified-react-api.herokuapp.com/shopify/config/mapping')
+      .then(response => {
         this.setState({
-          initialMapping:response.data,
-          mapping:response.data        
+          initialMapping: response.data,
+          mapping: response.data
         });
-      }else{
-        console.log("outside if");
-      }
-      console.log("response status:"+response.status+" response data: "+JSON.stringify(response.data));
-      console.log("mapping is :"+JSON.stringify(this.state.mapping));
+        console.log(this.state.initialMapping);
 
-    });
-    axios.get('/shopify/shop-api/products')
+      });
+    axios.get('https://tracified-react-api.herokuapp.com/shopify/shop-api/products')
       .then(response => {
         var products = response.data.products;
 
@@ -148,21 +147,29 @@ class ProductMapping extends Component {
 
     axios({
       method: 'get',
-      url: '/shopify/tracified/item-list',
-      headers: {
+      url: 'https://tracified-react-api.herokuapp.com/shopify/tracified/item-list',      headers: {
         'Content-Type': 'text/plain;charset=utf-8',
       },
     })
       .then(response_ => {
         this.setState({ tracedata: response_.data });
+        console.log("mapping response sttus : " + response_.status);
+        console.log("mapping response data : " + JSON.stringify(response_.data));
 
+        let responseTxt = "";
+        for ( const obj of response_.data) {
+          const itemname = obj.itemName.replace(/\s/g, "-");
+          responseTxt += obj.itemID + " : " + itemname + " , ";
+      }
+
+      this.setState({ tracedata: responseTxt });
         if (response_.status == 200) {
           this.setState({ isTraceListLoading: false });
 
         }
       })
       .catch(function (error) {
-        console.log(error);
+        console.log("error gettin mapping list :" + error);
       })
   }
 
@@ -204,11 +211,18 @@ class ProductMapping extends Component {
      * means it should look like " mapping: this.state.mapping"
      * make sure that state.mapping holds the current selections
      */
-    axios.post('/shopify/config/mapping', { mapping })
+    axios.post('https://tracified-react-api.herokuapp.com//shopify/config/mapping', { mapping })
       .then((result) => {
         alert("Mapping Successfully Saved!");
-        console.log( "Result :"+result);
+        console.log(result);
       });
+
+      // axios({
+      //   method: 'post',
+      //   url: 'https://tracified-local-test.herokuapp.com/shopify/tracified/item-list',      headers: {
+      //     'Content-Type': 'text/plain;charset=utf-8',
+      //   },
+      // })
 
   }
 
@@ -217,8 +231,15 @@ class ProductMapping extends Component {
   render() {
     const { productName, tracifiedItemID, tracifiedItemtitle, permission, isTraceListLoading, isProductListLoading } = this.state;
 
+    var navStyle={
+      // width: '340%',
+      zindex: '20'
+    }
+
     if (isTraceListLoading || isProductListLoading) {
-      return <Loading/> ;
+      return (
+              <Loading/>
+      );
       console.log('spinner');
     } else {
       console.log('not spinner');
@@ -227,51 +248,68 @@ class ProductMapping extends Component {
 
     return (
       <div class="loader" id="productmapping">
-
+        {/*<Sticky>*/}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.1/react.js"></script>
-
-        <div className="saveBtn">
-        <Row>
-          <Col sm="10">
-          </Col>
-          <Col sm="2">
-            <Button primary onClick={this.onSubmit}>Save</Button>
-          </Col>
-        </Row>
-        </div>
-
-        <div className="product-Mapping">
-        <Card title="Product Mapping Details">
-          <br />
-          <form>
+        
+          {/*<form>*/}
             <table className="table table-striped">
+              
+              <Sticky>
+
               <thead>
-                <tr>
-                  <td >Product Name</td>
-                  <td >Product Item ID</td>
-                  <td >Tracified Item title</td>
-                  <td >Permission</td>
-                </tr>
-              </thead>
-              <tbody>
+                <Row className="cardWrapper" style={navStyle}>
+                <Card>
 
-                {this.tabRow()}
-
-              </tbody>
-            </table>
-            <Row>
+                {/*<Row>                  
                   <Col sm="10">
+                    <p className="MappingDetails" style={{fontWeight:'bold',fontSize:'120%'}}>Product Mapping Details</p>
                   </Col>
                   <Col sm="2">
-                    {/* <Button primary onClick={this.onSubmit}>Save</Button> */}
-                  </Col>
+                    <Button primary onClick={this.onSubmit}>Save</Button>
+                  </Col>*/}
+                {/*</Row>*/}
+
+                {/*<br />*/}
+                
+                  <tr>
+                    <td>
+                      <p className="MappingDetails" style={{fontWeight:'bold',fontSize:'120%'}}>Product Mapping Details</p>
+                    </td>
+                    <td className="saveBtn">
+                      <Button primary onClick={this.onSubmit}>Save</Button>
+                    </td>
+                  </tr>
+                <tr >
+                  <Row className="tblHeaders">
+                  <Col sm="5" className="pName">Product Name</Col>
+                  <Col sm="2" className="Pid">Product Item ID</Col>
+                  <Col sm="3" className="tTitle">Tracified Item title</Col>
+                  <Col sm="2" className="Permission">Permission</Col>
                 </Row>
-          </form>
-        </Card>
-        </div>
+                </tr>
+                
+                {/*<Row className="tblHeaders">
+                  <Col sm="3" className="pName">Product Name</Col>
+                  <Col sm="3" className="Pid">Product Item ID</Col>
+                  <Col sm="3" className="tTitle">Tracified Item title</Col>
+                  <Col sm="3" className="Permission">Permission</Col>
+                </Row>*/}
+                </Card>
+                </Row>
+              </thead>
+              </Sticky>
+                <br/><br/><br/><br/><br/><br/><br/>
+              <tbody>
+                {this.tabRow()}
+              </tbody>
+            </table>            
+          {/*</form>*/}
+        {/*</Card>*/}
+        {/*</Sticky>*/}
       </div>
     );
     <ProductMapping /> , document.getElementById('productmapping')
+    console.log('document thing works');
   }
 
 }

@@ -1,27 +1,53 @@
-.saveBtn{
-    background-color: transparent;
-    z-index: initial;
-    position: fixed;
-    width: 100%;
+
+.Polaris-Card td{
+    width: 200% !important;
+}
+
+.tblHeaders .col-sm-3,.tblHeaders .col-sm-2,tblHeaders .col-sm-5{
+     padding-left: 1% !important; 
+/*     width: 25% !important; */
     padding-bottom: 1%;
-    display: inline-block;
+    font-weight: bold;
 }
 
-.product-Mapping form{
-    margin-top: 3%;
-/*     padding-top: 5%; */
+.pName,.Pid,.tTitle,.Permission{
+    font-weight: bold;
+}
+
+
+.Polaris-Card{
     position: fixed;
-    width: 100%;
-    overflow-y: scroll;
-    height: 90%;
+    z-index: 50;
+    width: 250%;
+    white-space: nowrap; 
+/*     width: 0em;  */
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+       text-overflow: ellipsis; 
+    padding-left: 10%;
 }
 
-.checkPolaris,.selectPolaris{
-    z-index: -10;
+.MappingDetails{
+    padding-top: 1%;
+    padding-left: 1%;
+    padding-bottom: 2% !important;
+    font-size: 150% !important;
+    width: 40%;
 }
 
-.Polaris-Card__Header h2{
-    margin-top: 1.5%;
-    font-weight: bolder !important;
-    display: inline-block;
+.saveBtn .Polaris-Button--primary{
+    margin-left: -40% !important;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+       text-overflow: ellipsis; 
+    white-space: nowrap; 
+}
+
+/* .Polaris-Button--primary{ */
+/*     position: fixed; */
+/*     margin-left: -170% !important; */
+/* } */
+
+.sticky{
+    z-index:50 !important; ;
 }
